@@ -1,11 +1,20 @@
 # NC.SignalRInWPF.Sample
-Use SignalR in WPF Application.
+Use SignalR in WPF Application on .Net 8.0.
 
-- NC.SignalR.Hub：SignalR服务端
-- NC.SignalR.Client：SignalR客户端
+- /NC.SignalR.Hub：SignalR服务端
+- /NC.SignalR.Client：SignalR客户端
+- /perf：性能测试工具目录，Crank、Microbenchmarks
+  - /benchmarkapps：Crankier 目录
+  - /Microsoft.AspNetCore.SignalR.Microbenchmarks：Microbenchmarks 目录
+- /pubish：应用发布目录
 - perf：性能测试工具目录，Crank、Microbenchmarks
-
-
+  
+<div  align="center">    
+  <img src="https://github.com/v2codes/NC.SignalRInWPF.Sample/assets/32858631/5c85d119-b712-4282-81b5-39bd7d07d339" width = "400" alt="SignalR 服务端"/>
+  <img src="https://github.com/v2codes/NC.SignalRInWPF.Sample/assets/32858631/5c85d119-b712-4282-81b5-39bd7d07d339" width = "400" alt="SignalR 服务端"/>
+</div>
+![image](https://github.com/v2codes/NC.SignalRInWPF.Sample/assets/32858631/5c85d119-b712-4282-81b5-39bd7d07d339)
+![image](https://github.com/v2codes/NC.SignalRInWPF.Sample/assets/32858631/3c253451-7f05-4fbd-8f23-8c717e6d0ca3)
 
 ### 使用 Crank 工具通过多个模拟客户端测试SignalR服务
 
