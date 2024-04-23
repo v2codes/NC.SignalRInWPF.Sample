@@ -1,0 +1,265 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.SignalR.Specification.Tests</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.SignalR.Specification.Tests.HubLifetimeManagerTestsBase`1">
+            <summary>
+            Base test class for lifetime manager implementations. Nothing specific to scale-out for these tests.
+            </summary>
+            <typeparam name="THub">The type of the <see cref="T:Microsoft.AspNetCore.SignalR.Hub"/>.</typeparam>
+        </member>
+        <member name="P:Microsoft.AspNetCore.SignalR.Specification.Tests.HubLifetimeManagerTestsBase`1.Manager">
+            <summary>
+            This API is obsolete and will be removed in a future version. Use CreateNewHubLifetimeManager in tests instead.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.HubLifetimeManagerTestsBase`1.CreateNewHubLifetimeManager">
+            <summary>
+            Method to create an implementation of <see cref="T:Microsoft.AspNetCore.SignalR.HubLifetimeManager`1"/> for use in tests.
+            </summary>
+            <returns>The implementation of <see cref="T:Microsoft.AspNetCore.SignalR.HubLifetimeManager`1"/> to test against.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.HubLifetimeManagerTestsBase`1.SendAllAsyncWritesToAllConnectionsOutput">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.HubLifetimeManagerTestsBase`1.SendAllAsyncDoesNotWriteToDisconnectedConnectionsOutput">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.HubLifetimeManagerTestsBase`1.SendGroupAsyncWritesToAllConnectionsInGroupOutput">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.HubLifetimeManagerTestsBase`1.SendGroupExceptAsyncDoesNotWriteToExcludedConnections">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.HubLifetimeManagerTestsBase`1.SendConnectionAsyncWritesToConnectionOutput">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.HubLifetimeManagerTestsBase`1.CanProcessClientReturnResult">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.HubLifetimeManagerTestsBase`1.CanProcessClientReturnErrorResult">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.HubLifetimeManagerTestsBase`1.ExceptionWhenIncorrectClientCompletesClientResult">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.HubLifetimeManagerTestsBase`1.ConnectionIDNotPresentWhenInvokingClientResult">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.HubLifetimeManagerTestsBase`1.InvokesForMultipleClientsDoNotCollide">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.HubLifetimeManagerTestsBase`1.ClientDisconnectsWithoutCompletingClientResult">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.HubLifetimeManagerTestsBase`1.CanCancelClientResult">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.SignalR.Specification.Tests.ScaleoutHubLifetimeManagerTests`1">
+            <summary>
+            Base test class for lifetime manager implementations that support server scale-out.
+            </summary>
+            <typeparam name="TBackplane">An in-memory implementation of the backplane that <see cref="T:Microsoft.AspNetCore.SignalR.HubLifetimeManager`1"/>s communicate with.</typeparam>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.ScaleoutHubLifetimeManagerTests`1.CreateBackplane">
+            <summary>
+            Method to create an implementation of an in-memory backplane for use in tests.
+            </summary>
+            <returns>The backplane implementation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.ScaleoutHubLifetimeManagerTests`1.CreateNewHubLifetimeManager(`0)">
+            <summary>
+            Method to create an implementation of <see cref="T:Microsoft.AspNetCore.SignalR.HubLifetimeManager`1"/> that uses the backplane from <see cref="M:Microsoft.AspNetCore.SignalR.Specification.Tests.ScaleoutHubLifetimeManagerTests`1.CreateBackplane"/>.
+            </summary>
+            <param name="backplane">The backplane implementation for use in the <see cref="T:Microsoft.AspNetCore.SignalR.HubLifetimeManager`1"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.ScaleoutHubLifetimeManagerTests`1.InvokeAllAsyncWithMultipleServersWritesToAllConnectionsOutput">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.ScaleoutHubLifetimeManagerTests`1.InvokeAllAsyncWithMultipleServersDoesNotWriteToDisconnectedConnectionsOutput">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.ScaleoutHubLifetimeManagerTests`1.InvokeConnectionAsyncOnServerWithoutConnectionWritesOutputToConnection">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.ScaleoutHubLifetimeManagerTests`1.InvokeGroupAsyncOnServerWithoutConnectionWritesOutputToGroupConnection">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.ScaleoutHubLifetimeManagerTests`1.DisconnectConnectionRemovesConnectionFromGroup">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.ScaleoutHubLifetimeManagerTests`1.RemoveGroupFromLocalConnectionNotInGroupDoesNothing">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.ScaleoutHubLifetimeManagerTests`1.RemoveGroupFromConnectionOnDifferentServerNotInGroupDoesNothing">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.ScaleoutHubLifetimeManagerTests`1.AddGroupAsyncForConnectionOnDifferentServerWorks">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.ScaleoutHubLifetimeManagerTests`1.AddGroupAsyncForLocalConnectionAlreadyInGroupDoesNothing">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.ScaleoutHubLifetimeManagerTests`1.AddGroupAsyncForConnectionOnDifferentServerAlreadyInGroupDoesNothing">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.ScaleoutHubLifetimeManagerTests`1.RemoveGroupAsyncForConnectionOnDifferentServerWorks">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.ScaleoutHubLifetimeManagerTests`1.InvokeConnectionAsyncForLocalConnectionDoesNotPublishToBackplane">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.ScaleoutHubLifetimeManagerTests`1.WritingToRemoteConnectionThatFailsDoesNotThrow">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.ScaleoutHubLifetimeManagerTests`1.WritingToGroupWithOneConnectionFailingSecondConnectionStillReceivesMessage">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.ScaleoutHubLifetimeManagerTests`1.InvokeUserSendsToAllConnectionsForUser">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.ScaleoutHubLifetimeManagerTests`1.StillSubscribedToUserAfterOneOfMultipleConnectionsAssociatedWithUserDisconnects">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.ScaleoutHubLifetimeManagerTests`1.CanProcessClientReturnResultAcrossServers">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.ScaleoutHubLifetimeManagerTests`1.CanProcessClientReturnErrorResultAcrossServers">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.ScaleoutHubLifetimeManagerTests`1.ConnectionIDNotPresentMultiServerWhenInvokingClientResult">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.ScaleoutHubLifetimeManagerTests`1.ClientDisconnectsWithoutCompletingClientResultOnSecondServer">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.ScaleoutHubLifetimeManagerTests`1.InvocationsFromDifferentServersUseUniqueIDs">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.ScaleoutHubLifetimeManagerTests`1.ConnectionDoesNotExist_FailsInvokeConnectionAsync">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Specification.Tests.ScaleoutHubLifetimeManagerTests`1.ClientReturnResultAcrossServersWithWrongReturnedTypeErrors">
+            <summary>
+            Specification test for SignalR HubLifetimeManager.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous completion of the test.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Internal.MemoryBufferWriter.WrittenBuffers">
+            <summary>
+            Holds the written segments from a MemoryBufferWriter and is no longer attached to a MemoryBufferWriter.
+            You are now responsible for calling Dispose on this type to return the memory to the pool.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Internal.MemoryBufferWriter.CompletedBuffer">
+            <summary>
+            Holds a byte[] from the pool and a size value. Basically a Memory but guaranteed to be backed by an ArrayPool byte[], so that we know we can return it.
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.SignalR.Microbenchmarks</name>
+    </assembly>
+    <members>
+        <member name="M:Microsoft.AspNetCore.Http.Connections.ServerSentEventsMessageFormatter.GetLastSegment(System.Buffers.ReadOnlySequence{System.Byte}@,System.Int64@)">
+            <summary>
+            Gets the last memory segment in a sequence.
+            </summary>
+            <param name="source">Source sequence.</param>
+            <param name="offset">The offset the segment starts at.</param>
+            <returns>The last memory segment in a sequence.</returns>
+        </member>
+    </members>
+</doc>

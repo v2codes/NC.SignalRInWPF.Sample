@@ -1,0 +1,45 @@
+﻿<Window x:Class="NC.SignalR.Hub.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NC.SignalR.Hub"
+        mc:Ignorable="d"
+        Title="WCS客户端 | SignalR服务端" Height="750" Width="600" FontSize="14" ResizeMode="NoResize">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="160"/>
+            <RowDefinition/>
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
+        <GroupBox Header="SignalR服务设置" Padding="5">
+            <WrapPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,5">
+                    <TextBlock Text="服务地址："></TextBlock>
+                    <TextBox Width="340" Text="{Binding HubServerUrl}"></TextBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,5">
+                    <TextBlock Text="发送内容："></TextBlock>
+                    <TextBox Width="340" Text="{Binding TxtInputMessage}" Height="47"></TextBox>
+                </StackPanel>
+                <StackPanel  Orientation="Horizontal" Margin="70,5" Height="30">
+                    <Button Content="{Binding BtnConnectText}" Width="100" Margin="0,0" Command="{Binding StartSignalRServerCommand}"></Button>
+                    <Button Content="广播消息" Width="100" Margin="20,0" Command="{Binding SendMessageCommand}"></Button>
+                </StackPanel>
+            </WrapPanel>
+        </GroupBox>
+        <GroupBox Grid.Row="1" Header="消息">
+            <TextBox TextWrapping="Wrap" IsReadOnly="True" FontSize="12px" VerticalScrollBarVisibility="Auto" Text="{Binding ShowMessageContent}"/>
+        </GroupBox>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="50,0">
+            <TextBlock Text="已接入客户端："></TextBlock>
+            <TextBlock Text="{Binding ConnectedClientCount}" Foreground="Red"></TextBlock>
+            <TextBlock Text="个 | 已发送："></TextBlock>
+            <TextBlock Text="{Binding SendMessageCount}" Foreground="Red"></TextBlock>
+            <TextBlock Text="条 | 已接收："></TextBlock>
+            <TextBlock Text="{Binding ReceivedMessageCount}" Foreground="Red"></TextBlock>
+            <TextBlock Text="条"></TextBlock>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.SignalR.Tests.Utils</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.SignalR.Tests.WrappingLoggerFactory">
+            <summary>
+            A logger factory that will prepend the current SignalR connection ID to the message.
+            </summary>
+        </member>
+    </members>
+</doc>
