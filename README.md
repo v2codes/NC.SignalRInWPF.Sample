@@ -10,7 +10,7 @@ Use SignalR in WPF Application on .Net 8.0.
   
 <div  align="center">    
   <img src="https://github.com/v2codes/NC.SignalRInWPF.Sample/assets/32858631/5c85d119-b712-4282-81b5-39bd7d07d339" width = "48%" alt="SignalR 服务端"/>
-  <img src="https://github.com/v2codes/NC.SignalRInWPF.Sample/assets/32858631/3f8776b2-0c97-498d-bab8-5e44dd2fccc4" width = "48%" alt="SignalR 服务端"/>
+  <img src="https://github.com/v2codes/NC.SignalRInWPF.Sample/assets/32858631/be4b76a8-14fe-4113-8bd4-3e31078ff413" width = "48%" alt="SignalR 服务端"/>
 </div>
 
 ### 使用 Crank 工具通过多个模拟客户端测试SignalR服务
