@@ -25,6 +25,7 @@
                 <StackPanel  Orientation="Horizontal" Margin="70,5" Height="30">
                     <Button Content="{Binding BtnConnectText}" Width="100" Margin="0,0" Command="{Binding StartSignalRServerCommand}"></Button>
                     <Button Content="广播消息" Width="100" Margin="20,0" Command="{Binding SendMessageCommand}"></Button>
+                    <Button Content="清空消息" Width="100" Margin="0,0" Command="{Binding ClearShowMessageCommand}"></Button>
                 </StackPanel>
             </WrapPanel>
         </GroupBox>

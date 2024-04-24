@@ -45,15 +45,15 @@ namespace NC.SignalR.Hub.ViewModels
             set => SetProperty(ref _showMessageContent, value);
         }
 
-        private int _sendMessageCount;
-        public int SendMessageCount
+        private decimal _sendMessageCount;
+        public decimal SendMessageCount
         {
             get => _sendMessageCount;
             set => SetProperty(ref _sendMessageCount, value);
         }
 
-        private int _receivedMessageCount;
-        public int ReceivedMessageCount
+        private decimal _receivedMessageCount;
+        public decimal ReceivedMessageCount
         {
             get => _receivedMessageCount;
             set => SetProperty(ref _receivedMessageCount, value);
@@ -70,6 +70,7 @@ namespace NC.SignalR.Hub.ViewModels
         #region Command
         public AsyncRelayCommand StartSignalRServerCommand { get; set; }
         public AsyncRelayCommand SendMessageCommand { get; set; }
+        public AsyncRelayCommand ClearShowMessageCommand { get; set; }
         #endregion
 
         private IHost _host;
@@ -85,6 +86,7 @@ namespace NC.SignalR.Hub.ViewModels
             ReceivedMessageCount = 0;
             StartSignalRServerCommand = new AsyncRelayCommand(StartSignalRServerAsync);
             SendMessageCommand = new AsyncRelayCommand(SendMessageAsync);
+            ClearShowMessageCommand = new AsyncRelayCommand(ClearShowMessageAsync);
         }
 
         #region SignalR Server
@@ -161,6 +163,13 @@ namespace NC.SignalR.Hub.ViewModels
                 ShowMessage($"广播发送:{TxtInputMessage}");
                 SendMessageCount += 1;
             }
+        }
+
+        private async Task ClearShowMessageAsync()
+        {
+            ShowMessageContent = string.Empty;
+            SendMessageCount = 0;
+            ReceivedMessageCount = 0;
         }
 
         private object _lockLog = new();

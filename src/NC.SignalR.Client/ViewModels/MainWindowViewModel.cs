@@ -76,15 +76,15 @@ namespace NC.SignalR.Client.ViewModels
             set => SetProperty(ref _showMessageContent, value);
         }
 
-        private int _sendMessageCount;
-        public int SendMessageCount
+        private decimal _sendMessageCount;
+        public decimal SendMessageCount
         {
             get => _sendMessageCount;
             set => SetProperty(ref _sendMessageCount, value);
         }
 
-        private int _receivedMessageCount;
-        public int ReceivedMessageCount
+        private decimal _receivedMessageCount;
+        public decimal ReceivedMessageCount
         {
             get => _receivedMessageCount;
             set => SetProperty(ref _receivedMessageCount, value);
@@ -127,11 +127,12 @@ namespace NC.SignalR.Client.ViewModels
         public AsyncRelayCommand InvokeMessageCommand { get; set; }
         #endregion
 
-        #region Test Command
+        #region 模拟测试 Command
         private ConcurrentDictionary<int, HubConnection> _testHubConnectionList { get; set; }
         public AsyncRelayCommand StartLongRunningCommand { get; set; }
         public AsyncRelayCommand StartRationRunningCommand { get; set; }
         public AsyncRelayCommand StopTestCommand { get; set; }
+        public AsyncRelayCommand ClearShowMessageCommand { get; set; }
         private CancellationTokenSource SendMessageCancelTokenSource { get; set; }
         #endregion
 
@@ -162,6 +163,7 @@ namespace NC.SignalR.Client.ViewModels
             StartLongRunningCommand = new AsyncRelayCommand(StartLongRunningAsync);
             StartRationRunningCommand = new AsyncRelayCommand(StartRationRunningAsync);
             StopTestCommand = new AsyncRelayCommand(StopTestAsync);
+            ClearShowMessageCommand = new AsyncRelayCommand(ClearShowMessageAsync);
         }
 
         #region 手动测试
@@ -279,8 +281,6 @@ namespace NC.SignalR.Client.ViewModels
             }
             #endregion
 
-            SendMessageCount = 0;
-            ReceivedMessageCount = 0;
             BtnStartLongRunningEnable = false;
             BtnStartRationRunningEnable = false;
             BtnStopTestEnable = true;
@@ -324,6 +324,7 @@ namespace NC.SignalR.Client.ViewModels
 
                         if (SendMessageCancelTokenSource.IsCancellationRequested)
                         {
+                            await Task.Delay(1000);
                             await connection.Value.StopAsync();
                             token.ThrowIfCancellationRequested();
                         }
@@ -361,9 +362,6 @@ namespace NC.SignalR.Client.ViewModels
                 return;
             }
             #endregion
-
-            SendMessageCount = 0;
-            ReceivedMessageCount = 0;
             BtnStartLongRunningEnable = false;
             BtnStartRationRunningEnable = false;
             BtnStopTestEnable = true;
@@ -407,6 +405,7 @@ namespace NC.SignalR.Client.ViewModels
 
                         if (SendMessageCancelTokenSource.IsCancellationRequested)
                         {
+                            await Task.Delay(500);
                             await connection.Value.StopAsync();
                             token.ThrowIfCancellationRequested();
                         }
@@ -449,6 +448,13 @@ namespace NC.SignalR.Client.ViewModels
             BtnStartLongRunningEnable = true;
             BtnStartRationRunningEnable = true;
             BtnStopTestEnable = false;
+        }
+
+        private async Task ClearShowMessageAsync()
+        {
+            ShowMessageContent = string.Empty;
+            SendMessageCount = 0;
+            ReceivedMessageCount = 0;
         }
         #endregion
 

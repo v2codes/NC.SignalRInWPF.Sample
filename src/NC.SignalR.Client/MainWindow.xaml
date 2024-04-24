@@ -52,7 +52,8 @@
                 <StackPanel Orientation="Horizontal" Height="30" Margin="80,5">
                     <Button Content="持续发送" Width="80" Command="{Binding StartLongRunningCommand}"></Button>
                     <Button Content="定量发送" Width="80" Command="{Binding StartRationRunningCommand}" Margin="10,0"></Button>
-                    <Button Content="停止" Width="80" Command="{Binding StopTestCommand}"></Button>
+                    <Button Content="停止" Width="80" Command="{Binding StopTestCommand}" ></Button>
+                    <Button Content="清空消息" Width="80" Command="{Binding ClearShowMessageCommand}" Margin="10,0"></Button>
                 </StackPanel>
             </WrapPanel>
         </GroupBox>
