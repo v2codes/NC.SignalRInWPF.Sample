@@ -11,60 +11,34 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using NC.SignalR.Hub.Hubs;
 using Microsoft.AspNetCore.SignalR;
+using System.ComponentModel;
+using System.Windows;
 
 namespace NC.SignalR.Hub.ViewModels
 {
-    public class MainWindowViewModel : ObservableObject
+    public partial class MainWindowViewModel : ObservableObject
     {
         #region Property
+        [ObservableProperty]
         private string _hubServerUrl;
-        public string HubServerUrl
-        {
-            get => _hubServerUrl;
-            set => SetProperty(ref _hubServerUrl, value);
-        }
 
+        [ObservableProperty]
         private string _btnConnectText;
-        public string BtnConnectText
-        {
-            get => _btnConnectText;
-            set => SetProperty(ref _btnConnectText, value);
-        }
 
+        [ObservableProperty]
         private string _txtInputMessage;
-        public string TxtInputMessage
-        {
-            get => _txtInputMessage;
-            set => SetProperty(ref _txtInputMessage, value);
-        }
 
-        private string _showMessageContent;
-        public string ShowMessageContent
-        {
-            get => _showMessageContent;
-            set => SetProperty(ref _showMessageContent, value);
-        }
-
+        [ObservableProperty]
         private decimal _sendMessageCount;
-        public decimal SendMessageCount
-        {
-            get => _sendMessageCount;
-            set => SetProperty(ref _sendMessageCount, value);
-        }
 
+        [ObservableProperty]
         private decimal _receivedMessageCount;
-        public decimal ReceivedMessageCount
-        {
-            get => _receivedMessageCount;
-            set => SetProperty(ref _receivedMessageCount, value);
-        }
 
+        [ObservableProperty]
         private int _connectedClientCount;
-        public int ConnectedClientCount
-        {
-            get => _connectedClientCount;
-            set => SetProperty(ref _connectedClientCount, value);
-        }
+
+        [ObservableProperty]
+        private BindingList<string> _showMessageContentList;
         #endregion
 
         #region Command
@@ -84,6 +58,7 @@ namespace NC.SignalR.Hub.ViewModels
             ConnectedClientCount = 0;
             SendMessageCount = 0;
             ReceivedMessageCount = 0;
+            ShowMessageContentList = new BindingList<string>();
             StartSignalRServerCommand = new AsyncRelayCommand(StartSignalRServerAsync);
             SendMessageCommand = new AsyncRelayCommand(SendMessageAsync);
             ClearShowMessageCommand = new AsyncRelayCommand(ClearShowMessageAsync);
@@ -167,26 +142,17 @@ namespace NC.SignalR.Hub.ViewModels
 
         private async Task ClearShowMessageAsync()
         {
-            ShowMessageContent = string.Empty;
             SendMessageCount = 0;
             ReceivedMessageCount = 0;
+            ShowMessageContentList.Clear();
         }
 
-        private object _lockLog = new();
         public void ShowMessage(string message)
         {
-            lock (_lockLog)
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                if (ShowMessageContent?.Length > 1024 * 1024 * 10) // 10MB 清空
-                {
-                    ShowMessageContent = $"[{DateTime.Now.ToString("HH:mm:ss.fff")}]{message}";
-                }
-                else
-                {
-                    ShowMessageContent = $"[{DateTime.Now.ToString("HH:mm:ss.fff")}]{message}{Environment.NewLine}{ShowMessageContent}";
-                }
-            }
-
+                ShowMessageContentList.Insert(0, $"[{DateTime.Now.ToString("HH:mm:ss.fff")}]{message}");
+            });
         }
     }
 }

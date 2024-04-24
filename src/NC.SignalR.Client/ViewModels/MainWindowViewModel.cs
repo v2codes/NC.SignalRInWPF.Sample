@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Threading;
 using System.Xml.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -17,106 +19,50 @@ using Microsoft.Win32;
 
 namespace NC.SignalR.Client.ViewModels
 {
-    public class MainWindowViewModel : ObservableObject
+    public partial class MainWindowViewModel : ObservableObject
     {
         #region Property
+        [ObservableProperty]
         private string _hubServerUrl;
-        public string HubServerUrl
-        {
-            get => _hubServerUrl;
-            set => SetProperty(ref _hubServerUrl, value);
-        }
 
+        [ObservableProperty]
         private string _btnConnectText;
-        public string BtnConnectText
-        {
-            get => _btnConnectText;
-            set => SetProperty(ref _btnConnectText, value);
-        }
 
+        [ObservableProperty]
         private string _txtInputMessage;
-        public string TxtInputMessage
-        {
-            get => _txtInputMessage;
-            set => SetProperty(ref _txtInputMessage, value);
-        }
 
+        [ObservableProperty]
         private int _clientCount;
-        public int ClientCount
-        {
-            get => _clientCount;
-            set => SetProperty(ref _clientCount, value);
-        }
 
+        [ObservableProperty]
         private int _messageLenth;
-        public int MessageLenth
-        {
-            get => _messageLenth;
-            set => SetProperty(ref _messageLenth, value);
-        }
 
+        [ObservableProperty]
         private int _sendInterval;
-        public int SendInterval
-        {
-            get => _sendInterval;
-            set => SetProperty(ref _sendInterval, value);
-        }
 
+        [ObservableProperty]
         private int _messageCount;
-        public int MessageCount
-        {
-            get => _messageCount;
-            set => SetProperty(ref _messageCount, value);
-        }
 
-        private string _showMessageContent;
-        public string ShowMessageContent
-        {
-            get => _showMessageContent;
-            set => SetProperty(ref _showMessageContent, value);
-        }
-
+        [ObservableProperty]
         private decimal _sendMessageCount;
-        public decimal SendMessageCount
-        {
-            get => _sendMessageCount;
-            set => SetProperty(ref _sendMessageCount, value);
-        }
 
+        [ObservableProperty]
         private decimal _receivedMessageCount;
-        public decimal ReceivedMessageCount
-        {
-            get => _receivedMessageCount;
-            set => SetProperty(ref _receivedMessageCount, value);
-        }
 
+        [ObservableProperty]
         private bool _btnStartLongRunningEnable;
-        public bool BtnStartLongRunningEnable
-        {
-            get => _btnStartLongRunningEnable;
-            set => SetProperty(ref _btnStartLongRunningEnable, value);
-        }
 
+        [ObservableProperty]
         private bool _btnStopTestEnable;
-        public bool BtnStopTestEnable
-        {
-            get => _btnStopTestEnable;
-            set => SetProperty(ref _btnStopTestEnable, value);
-        }
 
+        [ObservableProperty]
         private bool _btnStartRationRunningEnable;
-        public bool BtnStartRationRunningEnable
-        {
-            get => _btnStartRationRunningEnable;
-            set => SetProperty(ref _btnStartRationRunningEnable, value);
-        }
 
+        [ObservableProperty]
         private bool _isWaitServerResponse;
-        public bool IsWaitServerResponse
-        {
-            get => _isWaitServerResponse;
-            set => SetProperty(ref _isWaitServerResponse, value);
-        }
+
+        [ObservableProperty]
+        private BindingList<string> _showMessageContentList;
 
         #endregion
 
@@ -153,6 +99,8 @@ namespace NC.SignalR.Client.ViewModels
             SendInterval = 10;
             MessageCount = 1000;
 
+            ShowMessageContentList = new BindingList<string>();
+
             _testHubConnectionList = new ConcurrentDictionary<int, HubConnection>();
             #endregion
 
@@ -164,6 +112,7 @@ namespace NC.SignalR.Client.ViewModels
             StartRationRunningCommand = new AsyncRelayCommand(StartRationRunningAsync);
             StopTestCommand = new AsyncRelayCommand(StopTestAsync);
             ClearShowMessageCommand = new AsyncRelayCommand(ClearShowMessageAsync);
+
         }
 
         #region 手动测试
@@ -452,7 +401,7 @@ namespace NC.SignalR.Client.ViewModels
 
         private async Task ClearShowMessageAsync()
         {
-            ShowMessageContent = string.Empty;
+            ShowMessageContentList.Clear();
             SendMessageCount = 0;
             ReceivedMessageCount = 0;
         }
@@ -497,21 +446,13 @@ namespace NC.SignalR.Client.ViewModels
 
         #endregion
 
-        private object _lockLog = new();
+        //private object _lockLog = new();
         private void ShowMessage(string message)
         {
-            lock (_lockLog)
+            Application.Current.Dispatcher.Invoke(() => 
             {
-                if (ShowMessageContent?.Length > 1024 * 1024 * 10) // 10MB 清空
-                {
-                    ShowMessageContent = $"[{DateTime.Now.ToString("HH:mm:ss.fff")}]{message}";
-                }
-                else
-                {
-                    ShowMessageContent = $"[{DateTime.Now.ToString("HH:mm:ss.fff")}]{message}{Environment.NewLine}{ShowMessageContent}";
-                }
-            }
-
+                ShowMessageContentList.Insert(0, $"[{DateTime.Now.ToString("HH:mm:ss.fff")}]{message}");
+            });
         }
 
         //方法 需要传入长度

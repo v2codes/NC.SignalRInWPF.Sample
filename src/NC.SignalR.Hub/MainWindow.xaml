@@ -30,7 +30,13 @@
             </WrapPanel>
         </GroupBox>
         <GroupBox Grid.Row="1" Header="消息">
-            <TextBox TextWrapping="Wrap" IsReadOnly="True" FontSize="12px" VerticalScrollBarVisibility="Auto" Text="{Binding ShowMessageContent}"/>
+            <ListView ItemsSource="{Binding ShowMessageContentList}" >
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" FontSize="12" Height="13"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </GroupBox>
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="50,0">
