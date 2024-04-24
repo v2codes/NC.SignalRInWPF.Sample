@@ -59,7 +59,7 @@
         </GroupBox>
 
         <GroupBox Grid.Row="2" Header="消息">
-            <ListView ItemsSource="{Binding ShowMessageContentList}" >
+            <ListView ItemsSource="{Binding ShowMessageContentList}" VirtualizingPanel.IsVirtualizing="True">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding}" FontSize="12" Height="13"/>
