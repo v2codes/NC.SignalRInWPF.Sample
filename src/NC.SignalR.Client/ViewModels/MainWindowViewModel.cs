@@ -62,12 +62,20 @@ namespace NC.SignalR.Client.ViewModels
         private bool _isWaitServerResponse;
 
         [ObservableProperty]
+        private bool _isShowMessage;
+
+        [ObservableProperty]
         private BindingList<string> _showMessageContentList;
 
+        [ObservableProperty]
+        private decimal _disconnectCount;
+
+        [ObservableProperty]
+        private decimal _sendFailedCount;
         #endregion
 
-        #region Command
-        public AsyncRelayCommand ConnectSignalRServerCommand { get; set; }
+        #region 手动测试 Command
+        public AsyncRelayCommand ConnectCommand { get; set; }
         public AsyncRelayCommand SendMessageCommand { get; set; }
         public AsyncRelayCommand SendImageCommand { get; set; }
         public AsyncRelayCommand InvokeMessageCommand { get; set; }
@@ -78,7 +86,7 @@ namespace NC.SignalR.Client.ViewModels
         public AsyncRelayCommand StartLongRunningCommand { get; set; }
         public AsyncRelayCommand StartRationRunningCommand { get; set; }
         public AsyncRelayCommand StopTestCommand { get; set; }
-        public AsyncRelayCommand ClearShowMessageCommand { get; set; }
+        public AsyncRelayCommand ResetCommand { get; set; }
         private CancellationTokenSource SendMessageCancelTokenSource { get; set; }
         #endregion
 
@@ -98,25 +106,29 @@ namespace NC.SignalR.Client.ViewModels
             MessageLenth = 10;
             SendInterval = 10;
             MessageCount = 1000;
-
+            IsWaitServerResponse = true;
+            DisconnectCount = 0;
+            IsShowMessage = true;
+            SendFailedCount = 0;
             ShowMessageContentList = new BindingList<string>();
 
             _testHubConnectionList = new ConcurrentDictionary<int, HubConnection>();
             #endregion
 
-            ConnectSignalRServerCommand = new AsyncRelayCommand(ConnectSignalRServerAsync);
+            #region Command
+            ConnectCommand = new AsyncRelayCommand(ConnectAsync);
             SendMessageCommand = new AsyncRelayCommand(SendMessageAsync);
             InvokeMessageCommand = new AsyncRelayCommand(InvokeMessageAsync);
             SendImageCommand = new AsyncRelayCommand(SendImageAsync);
             StartLongRunningCommand = new AsyncRelayCommand(StartLongRunningAsync);
             StartRationRunningCommand = new AsyncRelayCommand(StartRationRunningAsync);
             StopTestCommand = new AsyncRelayCommand(StopTestAsync);
-            ClearShowMessageCommand = new AsyncRelayCommand(ClearShowMessageAsync);
-
+            ResetCommand = new AsyncRelayCommand(ResetAsync);
+            #endregion
         }
 
         #region 手动测试
-        private async Task ConnectSignalRServerAsync()
+        private async Task ConnectAsync()
         {
             if (_hubConnection == null || _hubConnection.State != HubConnectionState.Connected)
             {
@@ -135,11 +147,11 @@ namespace NC.SignalR.Client.ViewModels
             }
             else
             {
-                await DisconnectSignalRServerAsync();
+                await DisconnectAsync();
             }
         }
 
-        private async Task DisconnectSignalRServerAsync()
+        private async Task DisconnectAsync()
         {
             if (_hubConnection != null && _hubConnection.State == HubConnectionState.Connected)
             {
@@ -155,8 +167,7 @@ namespace NC.SignalR.Client.ViewModels
             {
                 // 约定参数MethodName、user、message
                 await _hubConnection.SendAsync("SendMessage", TxtInputMessage);
-                ShowMessage($"Client-X发送:{TxtInputMessage}");
-                SendMessageCount += 1;
+                ShowMessage($"Client-X发送:{TxtInputMessage}", true);
             }
             else
             {
@@ -183,7 +194,7 @@ namespace NC.SignalR.Client.ViewModels
                 var fileName = Path.GetFileName(dialog.FileName);
                 var data = await File.ReadAllBytesAsync(dialog.FileName);
                 await _hubConnection.SendAsync("SendImage", fileName, data);
-                ShowMessage($"Client-X发送文件:{fileName}");
+                ShowMessage($"Client-X发送文件:{fileName}", true);
             }
             else
             {
@@ -197,8 +208,7 @@ namespace NC.SignalR.Client.ViewModels
             {
                 // 约定参数MethodName、user、message
                 var result = await _hubConnection.InvokeAsync<string>("GetData", TxtInputMessage);
-                ShowMessage($"Client-X发送:{TxtInputMessage},返回:{result}");
-                SendMessageCount += 1;
+                ShowMessage($"Client-X发送:{TxtInputMessage},返回:{result}", true);
             }
             else
             {
@@ -235,7 +245,7 @@ namespace NC.SignalR.Client.ViewModels
             BtnStopTestEnable = true;
 
             // 停止手动连接
-            await DisconnectSignalRServerAsync();
+            await DisconnectAsync();
             _testHubConnectionList.Clear();
 
             #region 创建客户端并连接服务器
@@ -316,7 +326,7 @@ namespace NC.SignalR.Client.ViewModels
             BtnStopTestEnable = true;
 
             // 停止手动连接
-            await DisconnectSignalRServerAsync();
+            await DisconnectAsync();
             _testHubConnectionList.Clear();
 
             #region 创建客户端并连接服务器
@@ -354,7 +364,7 @@ namespace NC.SignalR.Client.ViewModels
 
                         if (SendMessageCancelTokenSource.IsCancellationRequested)
                         {
-                            await Task.Delay(500);
+                            await Task.Delay(1000);
                             await connection.Value.StopAsync();
                             token.ThrowIfCancellationRequested();
                         }
@@ -376,19 +386,15 @@ namespace NC.SignalR.Client.ViewModels
             if (IsWaitServerResponse)
             {
                 var response = await connection.InvokeAsync<string>("InvokeMessage", message);
-                ShowMessage($"Client-{clientIndex}{timeString}发送:{message},返回:{response}，耗时ms：{stopwatch.ElapsedTicks / 10000}");
+                ShowMessage($"Client-{clientIndex}{timeString}发送:{message},返回:{response}，耗时ms：{stopwatch.ElapsedTicks / 10000}", true);
             }
             else
             {
                 await connection.SendAsync("SendMessage", message);
-                ShowMessage($"Client-{clientIndex}{timeString}发送:{message},耗时ms:{stopwatch.ElapsedTicks / 10000}");
+                ShowMessage($"Client-{clientIndex}{timeString}发送:{message},耗时ms:{stopwatch.ElapsedTicks / 10000}", true);
             }
 
             stopwatch.Stop();
-
-            await slim.WaitAsync();
-            SendMessageCount += 1;
-            slim.Release();
         }
 
         private async Task StopTestAsync()
@@ -399,15 +405,19 @@ namespace NC.SignalR.Client.ViewModels
             BtnStopTestEnable = false;
         }
 
-        private async Task ClearShowMessageAsync()
-        {
-            ShowMessageContentList.Clear();
-            SendMessageCount = 0;
-            ReceivedMessageCount = 0;
-        }
         #endregion
 
+        private async Task ResetAsync()
+        {
+            SendMessageCount = 0;
+            ReceivedMessageCount = 0;
+            DisconnectCount = 0;
+            IsShowMessage = true;
+            ShowMessageContentList.Clear();
+        }
+
         #region CreateHubConnection
+        private object _lock = new();
         private HubConnection CreateHubConnection(string clientName)
         {
             var connect = new HubConnectionBuilder()
@@ -434,24 +444,41 @@ namespace NC.SignalR.Client.ViewModels
             {
                 ShowMessage($"{clientName},已断开连接!");
                 BtnConnectText = "连接";
+                lock (_lock)
+                {
+                    DisconnectCount += 1;
+                }
                 return Task.CompletedTask;
             };
             connect.On<string>("ReceiveMessage", (message) =>
             {
                 ReceivedMessageCount += 1;
-                ShowMessage($"{clientName}收到:{message}");
+                ShowMessage($"{clientName}收到:{message}", false, true);
             });
             return connect;
         }
 
         #endregion
 
-        //private object _lockLog = new();
-        private void ShowMessage(string message)
+        private object _lockMessage = new();
+        private void ShowMessage(string message, bool isSend = false, bool isReceive = false, bool isFailed = false)
         {
-            Application.Current.Dispatcher.Invoke(() => 
+            lock (_lockMessage)
             {
-                ShowMessageContentList.Insert(0, $"[{DateTime.Now.ToString("HH:mm:ss.fff")}]{message}");
+                if (isSend)
+                    SendMessageCount += 1;
+                if (isReceive)
+                    ReceivedMessageCount += 1;
+                if (isFailed)
+                    SendFailedCount += 1;
+            }
+            if (!IsShowMessage)
+            {
+                return;
+            }
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                ShowMessageContentList.Insert(0, $"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}]{message}");
             });
         }
 

@@ -10,7 +10,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="160"/>
             <RowDefinition/>
-            <RowDefinition Height="20"/>
+            <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
         <GroupBox Header="SignalR服务设置" Padding="5">
             <WrapPanel>
@@ -23,30 +23,54 @@
                     <TextBox Width="340" Text="{Binding TxtInputMessage}" Height="47"></TextBox>
                 </StackPanel>
                 <StackPanel  Orientation="Horizontal" Margin="70,5" Height="30">
-                    <Button Content="{Binding BtnConnectText}" Width="100" Margin="0,0" Command="{Binding StartSignalRServerCommand}"></Button>
-                    <Button Content="广播消息" Width="100" Margin="20,0" Command="{Binding SendMessageCommand}"></Button>
-                    <Button Content="清空消息" Width="100" Margin="0,0" Command="{Binding ClearShowMessageCommand}"></Button>
+                    <Button Content="{Binding BtnConnectText}" Width="80" Margin="0,0" Command="{Binding StartSignalRServerCommand}"></Button>
+                    <Button Content="广播消息" Width="80" Margin="10,0" Command="{Binding SendMessageCommand}"></Button>
+                    <Button Content="重置计数" Width="80" Command="{Binding ResetCommand}"></Button>
+                    <CheckBox Content="显示消息" Height="16" Margin="10,0" IsChecked="{Binding IsShowMessage}"/>
                 </StackPanel>
             </WrapPanel>
         </GroupBox>
         <GroupBox Grid.Row="1" Header="消息">
-            <ListView ItemsSource="{Binding ShowMessageContentList}"  VirtualizingPanel.IsVirtualizing="True">
+            <ListView ItemsSource="{Binding ShowMessageContentList}" KeyDown="ListView_KeyDown" VirtualizingPanel.IsVirtualizing="True">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding}" FontSize="12" Height="13"/>
+                        <TextBlock Text="{Binding}" FontSize="10" Height="12"/>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
         </GroupBox>
 
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="50,0">
-            <TextBlock Text="已接入客户端："></TextBlock>
-            <TextBlock Text="{Binding ConnectedClientCount}" Foreground="Red"></TextBlock>
-            <TextBlock Text="个 | 已发送："></TextBlock>
-            <TextBlock Text="{Binding SendMessageCount}" Foreground="Red"></TextBlock>
-            <TextBlock Text="条 | 已接收："></TextBlock>
-            <TextBlock Text="{Binding ReceivedMessageCount}" Foreground="Red"></TextBlock>
-            <TextBlock Text="条"></TextBlock>
+        <StackPanel Grid.Row="2" Orientation="Vertical" Margin="10,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Height="17" Text="客户端："></TextBlock>
+                <TextBlock Height="17" Text="{Binding ConnectedClientCount}" Foreground="Red"></TextBlock>
+                <TextBlock Height="17" Text="个"></TextBlock>
+            </StackPanel>
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <TextBlock Height="17" Text="已断开："></TextBlock>
+                <TextBlock Height="17" Text="{Binding DisconnectCount}" Foreground="Red"></TextBlock>
+                <TextBlock Height="17" Text="次"></TextBlock>
+            </StackPanel>
+            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                <TextBlock Height="17" Text="已发送："></TextBlock>
+                <TextBlock Height="17" Text="{Binding SendMessageCount}" Foreground="Red"></TextBlock>
+                <TextBlock Height="17" Text="条"></TextBlock>
+            </StackPanel>
+            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+                <TextBlock Height="17" Text="已接收："></TextBlock>
+                <TextBlock Height="17" Text="{Binding ReceivedMessageCount}" Foreground="Red"></TextBlock>
+                <TextBlock Height="17" Text="条"></TextBlock>
+            </StackPanel>
+            </Grid>
         </StackPanel>
     </Grid>
 </Window>

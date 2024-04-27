@@ -38,13 +38,19 @@ namespace NC.SignalR.Hub.ViewModels
         private int _connectedClientCount;
 
         [ObservableProperty]
+        private bool _isShowMessage;
+
+        [ObservableProperty]
         private BindingList<string> _showMessageContentList;
+
+        [ObservableProperty]
+        private decimal _disconnectCount;
         #endregion
 
         #region Command
         public AsyncRelayCommand StartSignalRServerCommand { get; set; }
         public AsyncRelayCommand SendMessageCommand { get; set; }
-        public AsyncRelayCommand ClearShowMessageCommand { get; set; }
+        public AsyncRelayCommand ResetCommand { get; set; }
         #endregion
 
         private IHost _host;
@@ -58,10 +64,13 @@ namespace NC.SignalR.Hub.ViewModels
             ConnectedClientCount = 0;
             SendMessageCount = 0;
             ReceivedMessageCount = 0;
+            DisconnectCount = 0;
+            IsShowMessage = true;
             ShowMessageContentList = new BindingList<string>();
+
             StartSignalRServerCommand = new AsyncRelayCommand(StartSignalRServerAsync);
             SendMessageCommand = new AsyncRelayCommand(SendMessageAsync);
-            ClearShowMessageCommand = new AsyncRelayCommand(ClearShowMessageAsync);
+            ResetCommand = new AsyncRelayCommand(ResetAsync);
         }
 
         #region SignalR Server
@@ -135,23 +144,37 @@ namespace NC.SignalR.Hub.ViewModels
                 // 约定参数MethodName、user、message
                 //hubContext.Clients.Client("xxx").SendAsync("ReceiveMessage", TxtInputMessage);
                 await hubContext.Clients.All.SendAsync("ReceiveMessage", TxtInputMessage);
-                ShowMessage($"广播发送:{TxtInputMessage}");
-                SendMessageCount += 1;
+                ShowMessage($"广播发送:{TxtInputMessage}", true);
             }
         }
 
-        private async Task ClearShowMessageAsync()
+        private async Task ResetAsync()
         {
             SendMessageCount = 0;
             ReceivedMessageCount = 0;
+            DisconnectCount = 0;
+            IsShowMessage = true;
             ShowMessageContentList.Clear();
         }
 
-        public void ShowMessage(string message)
+        private object _lockMessage = new();
+        public void ShowMessage(string message, bool isSend = false, bool isReceive = false)
         {
+            lock (_lockMessage)
+            {
+                if (isSend)
+                    SendMessageCount += 1;
+                if (isReceive)
+                    ReceivedMessageCount += 1;
+            }
+
+            if (!IsShowMessage)
+            {
+                return;
+            }
             Application.Current.Dispatcher.Invoke(() =>
             {
-                ShowMessageContentList.Insert(0, $"[{DateTime.Now.ToString("HH:mm:ss.fff")}]{message}");
+                ShowMessageContentList.Insert(0, $"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}]{message}");
             });
         }
     }

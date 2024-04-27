@@ -16,7 +16,6 @@ namespace NC.SignalR.Hub.Hubs
     {
         private MainWindowViewModel _viewModel;
         private ClientStorage _clientStorage;
-        private object _lockViewModel = new();
 
         public SyncHub(ClientStorage clientStorage)
         {
@@ -27,11 +26,7 @@ namespace NC.SignalR.Hub.Hubs
         public async Task SendMessage(string message)
         {
             var clientName = Context.GetCurrentClient();
-            _viewModel.ShowMessage($"收到:{clientName},{message}");
-            lock (_lockViewModel)
-            {
-                _viewModel.ReceivedMessageCount += 1;
-            }
+            _viewModel.ShowMessage($"收到:{clientName},{message}", false, true);
             //await Clients.All.SendAsync("ReceiveMessage", "WCS", message);
             //_viewModel.AppendMessage($"发送：{message}");
         }
@@ -39,11 +34,7 @@ namespace NC.SignalR.Hub.Hubs
         public async Task<string> InvokeMessage(string message)
         {
             var clientName = Context.GetCurrentClient();
-            _viewModel.ShowMessage($"收到:{clientName},{message}");
-            lock (_lockViewModel)
-            {
-                _viewModel.ReceivedMessageCount += 1;
-            }
+            _viewModel.ShowMessage($"收到:{clientName},{message}", false, true);
             //await Clients.All.SendAsync("ReceiveMessage", "WCS", message);
             //_viewModel.AppendMessage($"发送：{message}");
             return $"Resp-{message}";
@@ -62,31 +53,27 @@ namespace NC.SignalR.Hub.Hubs
             _viewModel.ShowMessage($"收到:{clientName},图片已保存[{file}]");
         }
 
-        public async Task<string> GetData(string input)
-        {
-            var clientName = Context.GetCurrentClient();
-            _viewModel.ShowMessage($"收到:{clientName},{input}");
-            return $"Response-{input}";
-        }
-
         public override async Task OnConnectedAsync()
         {
             var clientName = Context.GetCurrentClient();
             _clientStorage.TryAdd(Context.ConnectionId, clientName);
-
             //await Groups.AddToGroupAsync(Context.ConnectionId, "ClientGroup");
             _viewModel.ShowMessage($"客户端接入：{clientName}！");
             _viewModel.ConnectedClientCount = _clientStorage.Count();
             await base.OnConnectedAsync();
         }
 
+        private object _lockCount = new();
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
             var clientName = Context.GetCurrentClient();
             _clientStorage.TryRemove(clientName);
             _viewModel.ShowMessage($"客户端断开连接:{clientName} {exception?.Message}!");
             _viewModel.ConnectedClientCount = _clientStorage.Count();
-
+            lock (_lockCount)
+            {
+                _viewModel.DisconnectCount += 1;
+            }
             await base.OnDisconnectedAsync(exception);
         }
     }

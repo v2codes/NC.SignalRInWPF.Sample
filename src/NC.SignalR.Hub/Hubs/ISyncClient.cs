@@ -30,11 +30,5 @@ namespace NC.SignalR.Hub.Hubs
         /// <returns></returns>
         Task SendImage(string fileName, byte[] data);
 
-        /// <summary>
-        /// 接受返回数据
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        Task<string> GetData(string input);
     }
 }
