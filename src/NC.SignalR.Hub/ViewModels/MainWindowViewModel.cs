@@ -166,8 +166,8 @@ namespace NC.SignalR.Hub.ViewModels
                     SendMessageCount += 1;
                 if (isReceive)
                     ReceivedMessageCount += 1;
+                LogToFile.Write(message);
             }
-
             if (!IsShowMessage)
             {
                 return;

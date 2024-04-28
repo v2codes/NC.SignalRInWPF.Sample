@@ -471,7 +471,9 @@ namespace NC.SignalR.Client.ViewModels
                     ReceivedMessageCount += 1;
                 if (isFailed)
                     SendFailedCount += 1;
+                LogToFile.Write(message);
             }
+
             if (!IsShowMessage)
             {
                 return;
